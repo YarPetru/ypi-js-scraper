@@ -1,1 +1,1 @@
-# ypi-js-scrapper
+# ypi-js-scraper
