@@ -1,5 +1,4 @@
 const readline = require("readline");
-// const fs = require("fs").promises;
 const program = require("commander");
 require("colors");
 
@@ -10,7 +9,6 @@ const scraperController = require("./src/handlers/pageController");
 let browserInstance = browserObject.startBrowser();
 
 // Pass the browser instance to the scraper controller
-scraperController(browserInstance);
 
 // ----------------commander
 
@@ -36,13 +34,18 @@ const rl = readline.createInterface({
 });
 
 rl.question("Enter url for searching emails: \n".cyan.italic, (site) => {
-  //How TO CHECK VALIDITY OF THE URL - just in puppeeter?
+  // argv.url = new Array(site.trim());
+  // if (argv.url.length > 0) {
 
-  argv.url = site.trim(); // IS IT CORRECT?
+  argv.url = site.trim();
 
   if (argv.url) {
     console.log(`Start searching on: ${site}`.bgYellow.blue.bold.italic);
+    let siteForSearch = argv.url;
+
     // MAIN FUNCTION START
+    scraperController(browserInstance, siteForSearch);
+    // scraperController(browserInstance, siteForSearch, numberOfIteration);
 
     // CLOSE THE APP
     rl.close();
@@ -56,6 +59,8 @@ rl.question("Enter url for searching emails: \n".cyan.italic, (site) => {
         console.log(`Start searching on: ${site}`.bgYellow.blue.bold.italic);
 
         // MAIN FUNCTION START
+        scraperController(browserInstance, siteForSearch);
+
         // CLOSE THE APP
         rl.close();
       } else {
