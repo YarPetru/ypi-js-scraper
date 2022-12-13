@@ -10,4 +10,4 @@ The App on each iteration gets all the inner links on the page and all the mails
 
 node app go
 
-Then enter the site url starts with https:// ...
+Then enter the site url starts without https:// ... (e.g. "madappgang.com")

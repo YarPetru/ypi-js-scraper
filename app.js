@@ -34,6 +34,11 @@ const rl = readline.createInterface({
 });
 
 rl.question("Enter url for searching emails: \n".cyan.italic, (site) => {
+  // if (argv.url) {
+  // if (site === string)
+  //  !!! ________  НА ПЕРВОЙ ИТЕРАЦИИ У НАС МАССИВ
+  // А НА ПОСЛЕДУЮЩИХ МАССИВ ВНУТРИ ОБЪЕКТА
+
   // argv.url = new Array(site.trim());
   // if (argv.url.length > 0) {
 
@@ -41,11 +46,11 @@ rl.question("Enter url for searching emails: \n".cyan.italic, (site) => {
 
   if (argv.url) {
     console.log(`Start searching on: ${site}`.bgYellow.blue.bold.italic);
-    let siteForSearch = argv.url;
 
+    let urlForSearch = argv.url;
     // MAIN FUNCTION START
-    scraperController(browserInstance, siteForSearch);
-    // scraperController(browserInstance, siteForSearch, numberOfIteration);
+    scraperController(browserInstance, urlForSearch, 3);
+    // scraperController(browserInstance, urlForSearch, numberOfIteration);
 
     // CLOSE THE APP
     rl.close();
@@ -59,7 +64,7 @@ rl.question("Enter url for searching emails: \n".cyan.italic, (site) => {
         console.log(`Start searching on: ${site}`.bgYellow.blue.bold.italic);
 
         // MAIN FUNCTION START
-        scraperController(browserInstance, siteForSearch);
+        scraperController(browserInstance, urlForSearch);
 
         // CLOSE THE APP
         rl.close();
@@ -72,7 +77,7 @@ rl.question("Enter url for searching emails: \n".cyan.italic, (site) => {
   }
 
   // ADD THE LISTENER ON CLOSE EVENT
-  // rl.on("close", () => console.log("The end, all mails were found"));
+  rl.on("close", () => console.log("The end, all mails were found"));
 });
 
 // --------------------------
