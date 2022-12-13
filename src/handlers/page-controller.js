@@ -1,5 +1,4 @@
-const pageScraper = require("./pageScrapper");
-// "https://madappgang.com"
+const pageScraper = require("./page-scrapper");
 
 async function scrapeAll(browserInstance, urlForSearch, depth) {
   let browser;

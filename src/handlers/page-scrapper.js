@@ -2,7 +2,6 @@ const scraperObject = (urlForSearch, depth = 3) => ({
   urlForSearch,
   async scraper(browser) {
     let urlForSearch = "https://" + this.urlForSearch;
-    // urlForSearch = "https://" + urlForSearch;
     let page = await browser.newPage();
     console.log(`Navigating to ${urlForSearch}...`);
     console.log(`........................`);
@@ -15,19 +14,17 @@ const scraperObject = (urlForSearch, depth = 3) => ({
     let scrapedLinks = [];
 
     async function scrapeCurrentPage() {
-      // Wait for the required DOM to be rendered
+      // Wait for the required DOM to be rendered,
+      // get all page content, mails and links and filter them
       await page.waitForSelector("body");
-      // Get all content
+
       let content = await page.content();
 
-      // Get all the Mails on Main page
       let searchedMails = content.match(
         /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
       );
 
-      // Get  all the links on Main page
       let searchedUrls = await page.$$eval("body a", (links) => {
-        // Get href attibute
         links = links.map((l) => l.href);
         return links;
       });
@@ -41,14 +38,11 @@ const scraperObject = (urlForSearch, depth = 3) => ({
         (item, pos) => searchedMails.indexOf(item) == pos
       );
 
-      // Loop through each of those links, open a new page instance and get the relevant data from them
-
       let pagePromise = (link) =>
         new Promise(async (resolve, reject) => {
           let dataObj = {};
           let newPage = await browser.newPage();
           await newPage.goto(link);
-          // Get all content
           let content = await page.content();
 
           let currentPageLinks = await newPage.$$eval("body a", (links) => {
@@ -59,17 +53,6 @@ const scraperObject = (urlForSearch, depth = 3) => ({
           let currentPageMails = content.match(
             /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
           );
-
-          // // GET UNIQUE LINKS
-          // let filteredCurrentPageLinks = currentPageLinks.filter(
-          //   (item, pos) =>
-          //     scrapedLinks.indexOf(item) == pos && item.includes(urlForSearch)
-          // );
-
-          // // GET UNIQUE MAILS
-          // let filteredCurrentPageMails = currentPageMails.filter(
-          //   (item, pos) => scrapedMails.indexOf(item) == pos
-          // );
 
           dataObj["urls"] = currentPageLinks;
           dataObj["mails"] = currentPageMails;
@@ -87,9 +70,6 @@ const scraperObject = (urlForSearch, depth = 3) => ({
             let currentPageData = await pagePromise(uniqueFilteredUrls[item]);
             console.log("Data from: ", uniqueFilteredUrls[item]);
             console.log(currentPageData);
-
-            // console.log(currentPageData.mails);
-            // console.log(currentPageData.urls);
 
             scrapedMails = [
               ...new Set([...scrapedMails, ...currentPageData.mails]),
@@ -118,15 +98,11 @@ const scraperObject = (urlForSearch, depth = 3) => ({
             console.log("ITERATION", i);
             console.log("ныряем еще глубже");
             await page.close();
-            return scrapeCurrentPage(); // Call this function recursively
+            return scrapeCurrentPage();
           }
 
           i += 1;
           return scrapedLinks;
-
-          // console.log("ITERATION", i);
-          // console.log("ныряем еще глубже");
-          // i += 1;
         }
       }
     }
